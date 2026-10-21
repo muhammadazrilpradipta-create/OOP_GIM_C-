@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
+
 namespace KerangkaGame
 {
     class Karakter
     {
         public int total, power;
 
-        //encapsulation
         public string nama { get; private set; }
         public int kesehatan { get; private set; }
         public int senjata { get; private set; }
+        public int posisiSaatIni { get; private set; }
 
-        public Karakter(string nama, int kesehatan, int senjata) //membuat constructor
+        public Karakter(string nama, int kesehatan, int senjata)
         {
             this.nama = nama;
             this.kesehatan = kesehatan;
             this.senjata = senjata;
+            this.posisiSaatIni = 0; // Posisi awal otomatis mulai dari 0
         }
 
-        public void Serang(Karakter target) //membuat menthod menyerang
+        public void Serang(Karakter target)
         {
             Console.WriteLine("===> Mulai Serangan <===");
             target.TerimaSerangan(this.senjata);
         }
 
-        public void TerimaSerangan(int jumlahSerangan) // objek menerima serangan
+        public void TerimaSerangan(int jumlahSerangan)
         {
             kesehatan -= jumlahSerangan;
             Console.WriteLine($"{nama} diserang dengan {jumlahSerangan} sisa kesehatannya {kesehatan}");
@@ -41,43 +42,70 @@ namespace KerangkaGame
             Console.Write("Apakah mau disembuhkan? (Yes/No): ");
             string jawaban = Console.ReadLine().ToLower();
 
-            if (jawaban == "yes") 
+            if (jawaban == "yes")
             {
                 kesehatan += 20;
                 Console.WriteLine($"{nama} disembuhkan dengan penambahan 20. Kesehatan sekarang: {kesehatan}");
             }
-            else if (jawaban == "no") 
+            else if (jawaban == "no")
             {
                 Console.WriteLine($"{nama} tidak disembuhkan.");
             }
             else
             {
-                Console.WriteLine("Tidak ditemukan.");
+                Console.WriteLine("Pilihan tidak valid.");
             }
         }
 
+        public void Aksi(int posisiBaru)
+        {
+            int posisiAwal = this.posisiSaatIni;
+            this.posisiSaatIni = posisiBaru;
+            int jarak = posisiBaru - posisiAwal;
+
+            Console.WriteLine($"\n{nama} berpindah dari posisi {posisiAwal} ke posisi {posisiBaru} (Berpindah {jarak} langkah).");
+        }
 
         public void getData()
         {
             Console.WriteLine($"Karakter : {nama}");
             Console.WriteLine($"Kesehatan : {kesehatan}");
-            Console.WriteLine($"Senjata : {senjata}");
+            Console.WriteLine($"senjata : {senjata}");
+            Console.WriteLine($"Posisi Sekarang : {posisiSaatIni}");
         }
     }
-
 
     class MainProgram
     {
         static void Main(string[] args)
         {
-            Karakter player1 = new Karakter("Nexaa", 100, 10); // player utama
-            Karakter musuh1 = new Karakter("Nexii", 80, 50); //Musuh
+            Karakter player1 = new Karakter("Nexaa", 100, 10);
+            Karakter musuh1 = new Karakter("Nexii", 80, 50);
 
-
-            //interaksi
             player1.Serang(musuh1);
             musuh1.Serang(player1);
             player1.Healing();
+
+            bool sedangBermain = true;
+            while (sedangBermain)
+            {
+                
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.RightArrow)
+                {
+                    player1.Aksi(player1.posisiSaatIni + 2);
+                }
+                else if (keyInfo.Key == ConsoleKey.LeftArrow)
+                { 
+                    player1.Aksi(player1.posisiSaatIni - 1);
+                }
+                else if (keyInfo.Key == ConsoleKey.Escape)
+                {
+                    Console.WriteLine("\nPermainan berhenti.");
+                    sedangBermain = false;
+                }
+            }
         }
     }
 }
