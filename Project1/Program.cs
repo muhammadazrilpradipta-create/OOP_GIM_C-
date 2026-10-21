@@ -86,25 +86,50 @@ namespace KerangkaGame
             musuh1.Serang(player1);
             player1.Healing();
 
-            bool sedangBermain = true;
-            while (sedangBermain)
-            {
-                
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            Console.WriteLine("\nMana yang Kamu Pilih?");
+            Console.WriteLine("1. perpindahan angka Manual");
+            Console.WriteLine("2. perpindahan menggunakan keyboard/Arraw");
+            Console.Write("Pilihanmu: ");
+            string pilihan = Console.ReadLine();
 
-                if (keyInfo.Key == ConsoleKey.RightArrow)
+            if (pilihan == "1")
+            {
+                Console.Write("\nMasukkan posisi tujuan/baru untuk " + player1.nama + ": ");
+                if (int.TryParse(Console.ReadLine(), out int posisiTujuan))
                 {
-                    player1.Aksi(player1.posisiSaatIni + 2);
+                    player1.Aksi(posisiTujuan);
                 }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow)
-                { 
-                    player1.Aksi(player1.posisiSaatIni - 1);
-                }
-                else if (keyInfo.Key == ConsoleKey.Escape)
+                else
                 {
-                    Console.WriteLine("\nPermainan berhenti.");
-                    sedangBermain = false;
+                    Console.WriteLine("Input tidak valid, harap masukkan angka!");
                 }
+            }
+            else if (pilihan == "2")
+            {
+                Console.WriteLine("\nGunakan Panah Kanan (maju +2), Panah Kiri (mundur -1), atau Escape (keluar).");
+                bool sedangBermain = true;
+                while (sedangBermain)
+                {
+                   ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                    if (keyInfo.Key == ConsoleKey.RightArrow)
+                    {
+                        player1.Aksi(player1.posisiSaatIni + 2);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.LeftArrow)
+                    {
+                        player1.Aksi(player1.posisiSaatIni - 1);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.Escape)
+                    {
+                        Console.WriteLine("\nPermainan berhenti.");
+                        sedangBermain = false;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Pilihan tidak valid!");
             }
         }
     }
